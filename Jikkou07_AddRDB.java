@@ -110,7 +110,7 @@ public class Jikkou07_AddRDB{
 		
 		{
 			Sheet sheet=dbWb.createSheet();
-			dbWb.setSheetName(dbWb.getSheetIndex(sheet),oldName);
+			if(oldName!=null)dbWb.setSheetName(dbWb.getSheetIndex(sheet),oldName);
 			
 			//ヘッダセット
 			Row headerRow=sheet.createRow(0);
