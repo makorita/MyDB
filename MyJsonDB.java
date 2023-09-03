@@ -63,6 +63,22 @@ public class MyJsonDB{
 		curObj.put(key,new JSONObject(dataMap));
 	}
 	
+	public void addPathMap(String pathStr,Map<String,String> dataMap){	//既存キー削除
+		String[] word=pathStr.split("##");
+		for(int i=0;i<word.length;i++){
+			if(word[i].matches("\\[.*\\]")){
+				String keyStr=word[i].replace("[","");
+				keyStr=keyStr.replace("]","");
+				word[i]=dataMap.get(keyStr);
+			}
+		}
+		LinkedList<String> pathList=new LinkedList<String>();
+		for(int i=0;i<word.length-2;i++){
+			pathList.add(word[i]);
+		}
+		addStr(pathList,word[word.length-2],word[word.length-1]);
+	}
+	
 	public void addCSV(List<String> pathList,String csvPath,String mojiCode,String idCol,Set<String> headerSet) throws Exception{	//既存キー削除
 		HashMap<Integer,String> headerMap=new HashMap<Integer,String>();
 		int idColNum=-1;
@@ -95,6 +111,34 @@ public class MyJsonDB{
 			}
 			
 			addMap(pathList,idStr,dataMap);
+		}
+		br.close();
+	}
+	
+	public void addPathCSV(String pathStr,String csvPath,String mojiCode) throws Exception{	//既存キー削除
+		LinkedList<String> headerList=null;
+		
+		BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(csvPath), mojiCode));
+		String line;
+		while ((line = br.readLine()) != null) {
+			//System.out.println(line);
+			
+			//ヘッダ情報取得
+			if(headerList==null){
+				String[] word=line.split(",");
+				headerList=new LinkedList<String>(Arrays.asList(word));
+				continue;
+			}
+			
+			HashMap<String,String> dataMap=new HashMap<String,String>();
+			String[] word=line.split(",");
+			for(int i=0;i<word.length;i++){
+				if(word[i].length()==0)continue;
+				
+				dataMap.put(headerList.get(i),word[i]);
+			}
+			
+			addPathMap(pathStr,dataMap);
 		}
 		br.close();
 	}
