@@ -115,12 +115,12 @@ public class MyJsonDB{
 		br.close();
 	}
 	
-	public void addPathCSV(String pathStr,String csvPath,String mojiCode) throws Exception{	//既存キー削除
+	public void loadCSV(String pathStr,String csvPath,String mojiCode) throws Exception{	//既存キー削除
 		LinkedList<String> headerList=null;
 		
 		BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(csvPath), mojiCode));
 		String line;
-		while ((line = br.readLine()) != null) {
+		LABEL:while ((line = br.readLine()) != null) {
 			//System.out.println(line);
 			
 			//ヘッダ情報取得
@@ -133,13 +133,26 @@ public class MyJsonDB{
 			HashMap<String,String> dataMap=new HashMap<String,String>();
 			String[] word=line.split(",");
 			for(int i=0;i<word.length;i++){
-				if(word[i].length()==0)continue;
+				if(word[i].length()==0)continue LABEL;
 				
 				dataMap.put(headerList.get(i),word[i]);
 			}
 			
 			addPathMap(pathStr,dataMap);
 		}
+		br.close();
+	}
+	
+	public void loadCSV(File pathFile,String csvPath,String mojiCode) throws Exception{
+		BufferedReader br = new BufferedReader(new FileReader(filePath));
+		
+		String line;
+		while ((line = br.readLine()) != null) {
+			//System.out.println(line);
+			
+			loadCSV(line,csvPath,mojiCode);
+		}
+		
 		br.close();
 	}
 	
@@ -192,6 +205,7 @@ public class MyJsonDB{
 		wb.close();
 	}
 	
+	/*
 	public void loadExcel(List<String> pathList,String excelPath,String sheetName) throws Exception{	//Excelパス追加
 		Workbook wb = WorkbookFactory.create(new FileInputStream(excelPath));
 		Sheet sheet=wb.getSheet(sheetName);
@@ -227,6 +241,7 @@ public class MyJsonDB{
 		
 		wb.close();
 	}
+	*/
 	
 	public void showAll(){
 		System.out.println(root.toString(3));
