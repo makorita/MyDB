@@ -69,6 +69,8 @@ public class MyJsonDB{
 			if(word[i].matches("\\[.*\\]")){
 				String keyStr=word[i].replace("[","");
 				keyStr=keyStr.replace("]","");
+				if(!dataMap.containsKey(keyStr))return;
+				
 				word[i]=dataMap.get(keyStr);
 			}
 		}
